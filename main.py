@@ -89,7 +89,7 @@ class enemy(object):
         self.width = width
         self.height = height
         self.end = end
-        self.path = [self.x, self.x]
+        self.path = [self.x, self.end]
         self.walkCount = 0
         self.vel = 3
 
