@@ -3,33 +3,33 @@ import pygame
 import os
 
 pygame.init()
+
 clock = pygame.time.Clock()
 win = pygame.display.set_mode((500, 480))
-pygame.display.set_caption('TechWithTimLessons')
+pygame.display.set_caption('PygameArcade')
 score = 0
 bulletSound = pygame.mixer.Sound("Game/bullet.wav")
 hitSound = pygame.mixer.Sound("Game/hit.wav")
 music = pygame.mixer.music.load("Game/music.mp3")
 pygame.mixer.music.play(-1)
-
-walkRight = [
-    pygame.image.load(os.path.join('Game', 'R1.png')), pygame.image.load(os.path.join('Game', 'R2.png')),
-    pygame.image.load(os.path.join('Game', 'R3.png')), pygame.image.load(os.path.join('Game', 'R4.png')),
-    pygame.image.load(os.path.join('Game', 'R5.png')), pygame.image.load(os.path.join('Game', 'R6.png')),
-    pygame.image.load(os.path.join('Game', 'R7.png')), pygame.image.load(os.path.join('Game', 'R8.png')),
-    pygame.image.load(os.path.join('Game', 'R9.png'))]
-walkLeft = [
-    pygame.image.load(os.path.join('Game', 'L1.png')), pygame.image.load(os.path.join('Game', 'L2.png')),
-    pygame.image.load(os.path.join('Game', 'L3.png')), pygame.image.load(os.path.join('Game', 'L4.png')),
-    pygame.image.load(os.path.join('Game', 'L5.png')), pygame.image.load(os.path.join('Game', 'L6.png')),
-    pygame.image.load(os.path.join('Game', 'L7.png')), pygame.image.load(os.path.join('Game', 'L8.png')),
-    pygame.image.load(os.path.join('Game', 'L9.png'))]
 bg = pygame.image.load(os.path.join('Game', 'bg.jpg'))
-char = pygame.image.load(os.path.join('Game', 'standing.png'))
-goblin_list = []
 
 
 class player(object):
+    char = pygame.image.load(os.path.join('Game', 'standing.png'))
+    walkRight = [
+        pygame.image.load(os.path.join('Game', 'R1.png')), pygame.image.load(os.path.join('Game', 'R2.png')),
+        pygame.image.load(os.path.join('Game', 'R3.png')), pygame.image.load(os.path.join('Game', 'R4.png')),
+        pygame.image.load(os.path.join('Game', 'R5.png')), pygame.image.load(os.path.join('Game', 'R6.png')),
+        pygame.image.load(os.path.join('Game', 'R7.png')), pygame.image.load(os.path.join('Game', 'R8.png')),
+        pygame.image.load(os.path.join('Game', 'R9.png'))]
+    walkLeft = [
+        pygame.image.load(os.path.join('Game', 'L1.png')), pygame.image.load(os.path.join('Game', 'L2.png')),
+        pygame.image.load(os.path.join('Game', 'L3.png')), pygame.image.load(os.path.join('Game', 'L4.png')),
+        pygame.image.load(os.path.join('Game', 'L5.png')), pygame.image.load(os.path.join('Game', 'L6.png')),
+        pygame.image.load(os.path.join('Game', 'L7.png')), pygame.image.load(os.path.join('Game', 'L8.png')),
+        pygame.image.load(os.path.join('Game', 'L9.png'))]
+
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
@@ -49,18 +49,18 @@ class player(object):
             self.walkCount = 0
         if not self.standing:
             if self.left:  # drawing walk left
-                win.blit(walkLeft[self.walkCount // 3], (self.x, self.y))  # chose sprite from the list
+                win.blit(self.walkLeft[self.walkCount // 3], (self.x, self.y))  # chose sprite from the list
                 self.walkCount += 1
             elif self.right:  # drawing walk right
-                win.blit(walkRight[self.walkCount // 3], (self.x, self.y))  # chose sprite from the list
+                win.blit(self.walkRight[self.walkCount // 3], (self.x, self.y))  # chose sprite from the list
                 self.walkCount += 1
         else:
             if self.right:
-                win.blit(walkRight[0], (self.x, self.y))
+                win.blit(self.walkRight[0], (self.x, self.y))
             elif self.left:
-                win.blit(walkLeft[0], (self.x, self.y))
+                win.blit(self.walkLeft[0], (self.x, self.y))
             else:
-                win.blit(char, (self.x, self.y))
+                win.blit(self.char, (self.x, self.y))
         self.hitbox = (self.x + 17, self.y + 11, 29, 52)
         # pygame.draw.rect(win, (255, 0, 0), self.hitbox, 2)
 
@@ -179,7 +179,7 @@ def redrawGameWindow():
 
 man = player(50, 410, 64, 64)
 bullets = []
-
+goblin_list = []
 # Main loop
 run = True
 while run:
