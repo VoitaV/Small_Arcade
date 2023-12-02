@@ -125,6 +125,8 @@ class enemy(object):
         self.hitbox = (self.x + 17, self.y + 2, 31, 57)
         self.health = 10
         self.visible = True
+        self.jumpCountGoblin = 10
+        self.isJump = False
 
     def draw(self, win):
         self.move()
@@ -136,12 +138,26 @@ class enemy(object):
         else:
             win.blit(self.walkLeft[self.walkCount // 3], (self.x, self.y))
             self.walkCount += 1
-        self.hitbox = (self.x + 17, self.y + 2, 31, 57)
+            self.hitbox = (self.x + 17, self.y + 2, 31, 57)
         pygame.draw.rect(win, (255, 0, 0), (self.x, self.y - 20, 50, 10))
         pygame.draw.rect(win, (10, 125, 10), (self.x, self.y - 20, 5 * self.health, 10))
         pygame.draw.rect(win, (255, 0, 0), self.hitbox, 2)
 
+    def goblin_jump(self):
+        if self.jumpCountGoblin >= -10:
+            self.y -= (self.jumpCountGoblin * abs(self.jumpCountGoblin)) * 0.5  # jump trajectory
+            self.jumpCountGoblin -= 1
+        else:  # jump is finished
+            self.jumpCountGoblin = 10
+            self.isJump = False
+
     def move(self):
+        if random.randint(1, 100) == 5 and not self.isJump:
+            self.isJump = True
+
+        if self.isJump:
+            self.goblin_jump()
+
         if self.vel > 0:
             if self.x + self.vel < self.path[1]:
                 self.x += self.vel
@@ -184,9 +200,11 @@ goblin_list = []
 run = True
 while run:
     clock.tick(27)
-    while len(goblin_list) < 5:
+    while len(goblin_list) < 2:
         goblin_list.append(enemy(random.randint(100, 400), 410, 64, 64, 450))
     for goblin in goblin_list:
+        # if random.randint(1, 1000) == 10:
+        #     enemy.goblin_jump(goblin)
         if man.hitbox[1] < goblin.hitbox[1] + goblin.hitbox[3] and man.hitbox[1] + man.hitbox[3] > goblin.hitbox[1]:
             if man.hitbox[0] + man.hitbox[2] > goblin.hitbox[0] and man.hitbox[0] < goblin.hitbox[0] + goblin.hitbox[2]:
                 man.hit()
